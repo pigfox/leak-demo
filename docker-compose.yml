@@ -1,0 +1,57 @@
+# docker compose up -d --build   (on 104.223.116.10, behind Caddy at leaks.pigfox.com)
+# VERSION and CREATED_AT come from the deploy command; see the README.
+name: leak-demo
+services:
+  leak-demo:
+    container_name: leak-demo
+    image: leak-demo:${VERSION:-dev}
+    build:
+      context: .
+      args:
+        VERSION: ${VERSION:-dev}
+        CREATED_AT: ${CREATED_AT:-2026-11-08T17:06:43Z}
+        CREATED_BY: coordinator CO-S003
+      labels:
+        org.pigfox.estate: "RN"
+        org.pigfox.created-by: "coordinator CO-S003"
+        org.pigfox.created-at: "${CREATED_AT:-2026-11-08T17:06:43Z}"
+        org.pigfox.purpose: "Goroutine leak profile demo for pigfox.com/demos/goroutine-leaks"
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8549:8549"
+    environment:
+      LISTEN_ADDR: ":8549"
+      WORKER_ADDR: "127.0.0.1:8551"
+      ALLOWED_ORIGINS: "https://pigfox.com,https://dev.pigfox.com"
+      RESET_EVERY: "10m"
+      LEAK_CAP: "2000"
+      # Caddy replaces X-Forwarded-For with the visitor's address.
+      TRUST_FORWARDED: "true"
+      GOMEMLIMIT: "48MiB"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    # Server plus worker; 2,000 leaked goroutines are about 16 MB.
+    mem_limit: 160m
+    memswap_limit: 160m
+    cpus: 0.5
+    pids_limit: 64
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+    labels:
+      org.pigfox.estate: "RN"
+      org.pigfox.created-by: "coordinator CO-S003"
+      org.pigfox.created-at: "${CREATED_AT:-2026-11-08T17:06:43Z}"
+      org.pigfox.purpose: "Goroutine leak profile demo for pigfox.com/demos/goroutine-leaks"
+    networks: [leak-demo]
+networks:
+  leak-demo:
+    name: leak-demo
+    labels:
+      org.pigfox.estate: "RN"
+      org.pigfox.created-by: "coordinator CO-S003"
+      org.pigfox.created-at: "2026-11-08T17:06:43Z"
+      org.pigfox.purpose: "Network for the goroutine leak profile demo"
