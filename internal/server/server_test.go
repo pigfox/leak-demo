@@ -58,10 +58,10 @@ func post(t *testing.T, url, body string) (int, map[string]any) {
 func TestRunValidates(t *testing.T) {
 	_, pub := newTest(t, Config{})
 	for body, want := range map[string]int{
-		`{"scenario":"nope","variant":"leaky"}`:     400,
-		`{"scenario":"send","variant":"weird"}`:     400,
+		`{"scenario":"nope","variant":"leaky"}`:      400,
+		`{"scenario":"send","variant":"weird"}`:      400,
 		`{"scenario":"blindspot","variant":"fixed"}`: 400,
-		`not json`: 400,
+		`not json`:                              400,
 		`{"scenario":"send","variant":"fixed"}`: 200,
 	} {
 		if code, _ := post(t, pub.URL, body); code != want {

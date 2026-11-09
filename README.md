@@ -1,5 +1,9 @@
 # leak-demo
 
+[![ci](https://github.com/pigfox/leak-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/pigfox/leak-demo/actions/workflows/ci.yml)
+[![Go](https://img.shields.io/badge/go-1.27-00ADD8)](https://go.dev/doc/go1.27)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 **Real goroutine leaks, found live by Go 1.27's goroutine leak profile.**
 
 [Live demo](https://pigfox.com/demos/goroutine-leaks) · [API](https://leaks.pigfox.com/api/scenarios) · [Go 1.27 release notes](https://go.dev/doc/go1.27) · [Go blog: goroutine leak profiles](https://go.dev/blog/goroutine-leak-profiles)
